@@ -61,7 +61,7 @@ class AlphabeticalTransformer(libcst.CSTTransformer):
     )
 
 
-def reorder_file(filename: str):
+def reorder_file(filename: str, ignore_file_check=False):
   transformer = AlphabeticalTransformer()
   with open(filename, "r") as python_file:
     python_source = python_file.read()
@@ -84,7 +84,7 @@ def reorder_file(filename: str):
     warnings = pyflakes.api.check(potential_code, filename)
 
     # check for warnings
-    if warnings > 0:
+    if warnings > 0 and not ignore_file_check:
       print("ignoring - got %s warnings, may break things. %s" % (warnings, filename))
 
     # if code is non-empty, write it:
@@ -94,8 +94,16 @@ def reorder_file(filename: str):
         python_file.write(potential_code)
 
 def main():
-  for file in glob.glob(os.path.expanduser(sys.argv[1]), recursive=True):
-    reorder_file(file)
+  ignore_file_check = False
+  for keyword in sys.argv[1:]:
+    # Allow ignoring of syntax errors caught by pyflakes
+    if keyword == "--ignore-syntax-errors":
+      ignore_file_check = True
+      continue
+
+    # Reorder each file in the glob
+    for file in glob.glob(os.path.expanduser(keyword), recursive=True):
+      reorder_file(file, ignore_file_check=ignore_file_check)
 
 
 if __name__ == "__main__":
