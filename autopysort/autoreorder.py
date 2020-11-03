@@ -37,12 +37,12 @@ class AlphabeticalTransformer(libcst.CSTTransformer):
     outclasses = []
     for clazz in classes:
       class_body = clazz.body
-      other = [x for x in class_body.body if not isinstance(x, libcst.FunctionDef)]
+      class_other = [x for x in class_body.body if not isinstance(x, libcst.FunctionDef)]
       classfuncs = [x for x in class_body.body if isinstance(x, libcst.FunctionDef)]
 
       classfuncs.sort(key=lambda x: x.name.value)
       outbody = []
-      outbody.extend(other)
+      outbody.extend(class_other)
       outbody.extend(classfuncs)
       outclasses.append(clazz.with_changes(
         body=clazz.body.with_changes(body=outbody)
