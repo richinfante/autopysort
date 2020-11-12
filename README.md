@@ -5,8 +5,16 @@ This *experimental* tool re-organizes python files in alphabetical order. This c
 Internally, this uses `libcst` for transformations, and checks it's work using pyflakes. The pyflakes checking *can* be disabled, and we're working on better detection of error cases.
 
 ## Usage
+```bash
+python3 sortpy.py [--ignore-syntax-errors] <file globs...>
+
+#.. or after install..#
+sortpy [--ignore-syntax-errors] <file globs...>
 ```
-python3 autoreorder.py [--ignore-syntax-errors] <file globs...>
+
+## Install
+```bash
+sudo make install
 ```
 
 ## Warning!
